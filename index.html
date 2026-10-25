@@ -74,6 +74,21 @@ h1,h2{margin:0; text-wrap:balance}
 .chip.on{background:var(--marker); color:var(--on-marker); border-color:var(--on-marker)}
 .complete{margin:0; padding:12px 14px; border-radius:12px; background:var(--pen-bg); color:var(--pen); font-weight:700; display:flex; flex-direction:column; gap:2px}
 .complete b{font-family:var(--display); font-weight:400; font-size:1.6rem; line-height:1.2}
+.manual summary{font-weight:700}
+.man{display:flex; flex-direction:column; gap:10px; padding-bottom:16px; font-size:.92rem}
+.man h3{margin:8px 0 0; font-size:1rem; font-weight:900}
+.man p{margin:0}
+.man ul{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:4px}
+.man b{font-weight:900}
+.sheet-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--paper)}
+.sheet{border-collapse:collapse; font-size:.82rem}
+.sheet th,.sheet td{border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top}
+.sheet thead th,.sheet tbody th{background:var(--card); color:var(--sub); font-weight:500; text-align:center; font-variant-numeric:tabular-nums; width:2.2em}
+.sheet tr.hd td{font-weight:900; background:var(--x-bg)}
+.sheet td{white-space:nowrap}
+.sheet td:nth-child(2){white-space:normal; min-width:12rem; max-width:16rem}
+.sheet td.ans{color:var(--pen); font-weight:900; text-align:center}
+.modes{display:flex; flex-direction:column; gap:16px}
 .links{display:grid; grid-template-columns:1fr 1fr; gap:10px}
 details{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:4px 16px}
 summary{font-weight:700; padding-block:12px; cursor:pointer}
@@ -144,6 +159,35 @@ h2.sec span{font-size:.8rem; color:var(--sub); font-weight:500}
 .list .n .r{display:block; font-size:.85rem; color:var(--sub)}
 .head{display:flex; align-items:center; gap:12px}
 .head h1{font-family:var(--display); font-weight:400; font-size:1.5rem}
+/* ---------- tablets: bigger type, wider column, side-by-side cards, 2x2 answers ---------- */
+@media (min-width: 700px){
+  html{font-size:18px}
+  body{font-size:1rem; background-size:28px 28px}
+  .app{max-width:48rem; padding-inline:32px; padding-block:32px 56px}
+  .screen{gap:20px}
+  .brand svg{width:64px; height:64px}
+  .brand h1{font-size:2.3rem}
+  .modes{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:stretch}
+  .modes .mode .go{margin-top:auto}
+  .tally b{font-size:1.9rem}
+  .tally span{font-size:.85rem}
+  .qcard{min-height:12rem; padding:28px 24px}
+  .qtext{font-size:1.55rem}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .choice{min-height:96px; font-size:1.25rem; padding:16px 18px}
+  .choice .k{width:38px; height:38px; font-size:1.2rem}
+  .verdict{font-size:1.6rem}
+  .go{min-height:64px; font-size:1.25rem}
+  .timer .track{height:14px}
+  .timer .tnum{font-size:2rem}
+  .dots i{height:12px}
+  .maru{width:200px; height:200px}
+  .list li{padding:14px 18px}
+}
+@media (min-width: 1100px){
+  html{font-size:20px}
+  .app{max-width:56rem}
+}
 @media (prefers-reduced-motion: reduce){ .maru circle,.hana path{animation:none; stroke-dashoffset:0} .go:active,.choice:active{transform:none} }
 </style>
 </head>
@@ -171,6 +215,7 @@ h2.sec span{font-size:.8rem; color:var(--sub); font-weight:500}
 
   <div class="empty" id="emptyBank" hidden>まだ問題がありません。</div>
 
+  <div class="modes">
   <div class="mode" id="modeNew">
     <h2>まだ正解していない問題から10問</h2>
     <p id="newInfo">あてはまる問題：0問</p>
@@ -190,6 +235,7 @@ h2.sec span{font-size:.8rem; color:var(--sub); font-weight:500}
     </div>
     <p id="weakInfo">あてはまる問題：0問</p>
     <button class="go" id="startWeak" type="button">スタート</button>
+  </div>
   </div>
 
   <div class="mode quiet" id="modeTime">
@@ -224,6 +270,44 @@ h2.sec span{font-size:.8rem; color:var(--sub); font-weight:500}
         <button class="plain" id="reloadBtn" type="button">読みこみ直す</button>
         <button class="plain" id="removeBtn" type="button">一覧から外す</button>
       </div>
+    </div>
+  </details>
+
+  <details class="manual" id="manual">
+    <summary>問題の作り方（マニュアル）</summary>
+    <div class="man">
+      <h3>1. スプレッドシートの書式</h3>
+      <p>Google スプレッドシートに、1行に1問ずつ書きます。1行目は見出しです。</p>
+      <div class="sheet-wrap">
+        <table class="sheet">
+          <thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead>
+          <tbody>
+            <tr class="hd"><th>1</th><td>問題</td><td>１</td><td>２</td><td>３</td><td>４</td><td>正解</td></tr>
+            <tr><th>2</th><td>流れる水の3つのはたらきとは、侵食作用、運搬作用と、あと一つは何か。</td><td>堆積作用</td><td>風化作用</td><td>造山作用</td><td>しゅう曲作用</td><td class="ans">1</td></tr>
+            <tr><th>3</th><td>空気中に最も多く含まれている気体はどれか。</td><td>酸素</td><td>二酸化炭素</td><td>窒素</td><td>水素</td><td class="ans">3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">スマホでは、表を横にずらすとF列まで見られます。</p>
+      <ul>
+        <li><b>A列</b>：問題文</li>
+        <li><b>B〜E列</b>：選択肢を4つ。1つでも空欄があると、その行は読みとばします。</li>
+        <li><b>F列</b>：正解の選択肢の<b>番号</b>（1〜4）。答えの言葉ではなく番号を書きます。全角でも半角でもかまいません。</li>
+        <li>選択肢の並びはアプリが毎回まぜるので、正解はどの列に置いてもかまいません。</li>
+        <li>まったく同じ問題文の行が2つ以上あると、1問にまとめます。</li>
+        <li>1つのファイルが1つの問題セットになり、読むのは最初のシートです。科目や単元ごとにファイルを分けてください。</li>
+      </ul>
+      <h3>2. 共有の設定</h3>
+      <p>スプレッドシート右上の「共有」で、一般的なアクセスを「リンクを知っている全員」・「閲覧者」にします。この設定がないと読みこめません。</p>
+      <h3>3. アプリに登録する</h3>
+      <p>上の「問題セットを追加・更新する」を開き、セットの名前とスプレッドシートのURLを入れて「読みこんで登録する」を押します。登録したセットは、画面の上にボタンで並びます。</p>
+      <h3>4. 問題を直すとき</h3>
+      <ul>
+        <li>シートを直したら、アプリを開き直すと反映されます。すぐ反映したいときは「読みこみ直す」を押します。</li>
+        <li>選択肢や正解の番号だけを直した場合、まちがい履歴はそのまま引きつぎます。</li>
+        <li>問題文を1文字でも変えると別の問題として扱い、その問題の履歴は0からになります。</li>
+        <li>行を消しても履歴は残り、同じ問題文の行を戻すと履歴も戻ります。</li>
+      </ul>
     </div>
   </details>
 
